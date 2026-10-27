@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple student planner to organize tasks, study schedules, assignments, exams, and goals.">
+  <title>Student Planner SaaS</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Student Planner home">
+        <span class="brand-icon">🎓</span>
+        <span><strong>StudySpace</strong><small>Student Planner</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="nav-link active" href="#dashboard" data-view="dashboard"><span>▦</span> Dashboard</a>
+        <a class="nav-link" href="#tasks" data-view="tasks"><span>✓</span> My Tasks</a>
+        <a class="nav-link" href="#timetable" data-view="timetable"><span>▦</span> Timetable</a>
+        <a class="nav-link" href="#assignments" data-view="assignments"><span>▤</span> Assignments</a>
+        <a class="nav-link" href="#exams" data-view="exams"><span>◷</span> Exams</a>
+        <a class="nav-link" href="#goals" data-view="goals"><span>◎</span> Goals</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="tip-card"><span>💡</span><strong>Little steps add up!</strong><p>Plan your day and make progress one task at a time.</p></div>
+        <div class="profile"><div class="avatar">S</div><div><strong>Student</strong><small>Keep learning ✨</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Toggle navigation">☰</button>
+        <div class="welcome"><p class="eyebrow" id="todayLabel">YOUR STUDY SPACE</p><h1>Good morning, student! <span>👋</span></h1><p class="muted">Plan your day, focus on what matters, and celebrate your progress.</p></div>
+        <div class="top-actions"><span class="date-chip" id="todayDate"></span><button class="primary-btn" id="quickAdd">＋ Add task</button></div>
+      </header>
+
+      <section class="stats-grid" aria-label="Study overview">
+        <article class="stat-card blue"><div class="stat-top"><span>Total tasks</span><span class="stat-icon">✓</span></div><strong id="statTasks">0</strong><small id="statTaskNote">Tasks in your planner</small><div class="mini-track"><span id="taskBar"></span></div></article>
+        <article class="stat-card green"><div class="stat-top"><span>Assignments</span><span class="stat-icon">▤</span></div><strong id="statAssignments">0</strong><small>Assignments tracked</small><div class="mini-track"><span id="assignmentBar"></span></div></article>
+        <article class="stat-card pink"><div class="stat-top"><span>Upcoming exams</span><span class="stat-icon">◷</span></div><strong id="statExams">0</strong><small>Exams still to come</small><div class="mini-track"><span id="examBar"></span></div></article>
+        <article class="stat-card purple"><div class="stat-top"><span>Tasks completed</span><span class="stat-icon">✦</span></div><strong id="statCompleted">0%</strong><small>Keep up the good work!</small><div class="mini-track"><span id="completedBar"></span></div></article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel tasks-panel" id="tasksPanel">
+          <div class="panel-heading"><div><p class="eyebrow">STAY ON TRACK</p><h2>My tasks</h2></div><button class="text-btn" id="showAllTasks">View all →</button></div>
+          <form id="taskForm" class="inline-form">
+            <label class="sr-only" for="taskInput">New task</label><input id="taskInput" maxlength="100" placeholder="What do you need to do?" required>
+            <select id="taskPriority" aria-label="Task priority"><option value="Medium">Medium</option><option value="High">High</option><option value="Low">Low</option></select>
+            <button class="primary-btn" type="submit">Add</button>
+          </form>
+          <div class="task-list" id="taskList"></div>
+          <p class="empty-state" id="taskEmpty" hidden>No tasks yet. Add your first task above! 🌱</p>
+        </article>
+
+        <article class="panel progress-panel">
+          <div class="panel-heading"><div><p class="eyebrow">YOUR EFFORT COUNTS</p><h2>Study progress</h2></div><span class="soft-icon">↗</span></div>
+          <div class="progress-content"><div class="progress-ring" id="progressRing"><div><strong id="progressPercent">0%</strong><small>completed</small></div></div><div class="progress-legend"><p><span class="dot blue-dot"></span><span>Completed</span><strong id="legendDone">0</strong></p><p><span class="dot gray-dot"></span><span>Remaining</span><strong id="legendRemaining">0</strong></p></div></div>
+          <div class="quote-box"><span>“</span><p>Success is the sum of small efforts, repeated day in and day out.</p></div>
+        </article>
+
+        <article class="panel timetable-panel" id="timetablePanel">
+          <div class="panel-heading"><div><p class="eyebrow">MAKE TIME TO LEARN</p><h2>Study timetable</h2></div><button class="text-btn" id="addStudyBtn">＋ Add slot</button></div>
+          <form id="studyForm" class="compact-form" hidden>
+            <input id="studySubject" placeholder="Subject" maxlength="60" required>
+            <input id="studyTime" placeholder="e.g. 10:00–11:00" maxlength="40" required>
+            <button class="primary-btn" type="submit">Save</button>
+          </form>
+          <div id="studyList" class="schedule-list"></div>
+        </article>
+
+        <article class="panel assignments-panel" id="assignmentsPanel">
+          <div class="panel-heading"><div><p class="eyebrow">DEADLINES MADE SIMPLE</p><h2>Assignments</h2></div><button class="text-btn" id="addAssignmentBtn">＋ Add</button></div>
+          <form id="assignmentForm" class="compact-form" hidden>
+            <input id="assignmentTitle" placeholder="Assignment name" maxlength="100" required>
+            <input id="assignmentDue" type="date" aria-label="Assignment due date" required>
+            <select id="assignmentPriority" aria-label="Assignment priority"><option>Medium</option><option>High</option><option>Low</option></select>
+            <button class="primary-btn" type="submit">Save</button>
+          </form>
+          <div id="assignmentList" class="item-list"></div>
+        </article>
+
+        <article class="panel exams-panel" id="examsPanel">
+          <div class="panel-heading"><div><p class="eyebrow">BE READY</p><h2>Exam reminders</h2></div><button class="text-btn" id="addExamBtn">＋ Add exam</button></div>
+          <form id="examForm" class="compact-form" hidden>
+            <input id="examSubject" placeholder="Exam / subject" maxlength="80" required>
+            <input id="examDate" type="date" aria-label="Exam date" required>
+            <button class="primary-btn" type="submit">Save</button>
+          </form>
+          <div id="examList" class="item-list"></div>
+        </article>
+
+        <article class="panel goals-panel" id="goalsPanel">
+          <div class="panel-heading"><div><p class="eyebrow">AIM FOR SOMETHING</p><h2>My goals</h2></div><button class="text-btn" id="addGoalBtn">＋ Add goal</button></div>
+          <form id="goalForm" class="compact-form" hidden>
+            <input id="goalTitle" placeholder="Your study goal" maxlength="100" required>
+            <button class="primary-btn" type="submit">Save</button>
+          </form>
+          <div id="goalList" class="goal-list"></div>
+        </article>
+      </section>
+      <footer><span>🎓 StudySpace</span><span>Made for your next big achievement.</span><button class="text-btn" id="resetDemo">Reset demo data</button></footer>
+    </main>
+  </div>
+
+  <dialog id="editDialog" class="edit-dialog">
+    <form method="dialog" id="editForm">
+      <div class="panel-heading"><h2>Edit task</h2><button class="icon-btn" value="cancel" aria-label="Close">✕</button></div>
+      <input id="editTaskTitle" maxlength="100" required>
+      <select id="editTaskPriority"><option>Low</option><option>Medium</option><option>High</option></select>
+      <input type="hidden" id="editTaskId">
+      <div class="dialog-actions"><button class="secondary-btn" value="cancel">Cancel</button><button class="primary-btn" id="saveEdit" value="default">Save changes</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
